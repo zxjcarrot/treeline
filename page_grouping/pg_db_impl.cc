@@ -82,6 +82,20 @@ PageGroupedDBImpl::~PageGroupedDBImpl() {
   mgr_->PutBatchParallel(records);
 }
 
+void PageGroupedDBImpl::GetIOStats(uint64_t & reads, uint64_t & writes) {
+  if (!mgr_.has_value()) return;
+  auto read_counts =  mgr_->GetReadCounts();
+  auto write_counts =  mgr_->GetWriteCounts();
+  
+  for (size_t i = 0; i < read_counts.size(); ++i) {
+    reads += (i + 1) * read_counts[i];
+  }
+
+  for (size_t i = 0; i < write_counts.size(); ++i) {
+    writes += (i + 1) * write_counts[i];
+  }
+}
+
 Status PageGroupedDBImpl::BulkLoad(const std::vector<Record>& records) {
   if (mgr_.has_value()) {
     return Status::NotSupported("Cannot bulk load a non-empty DB.");

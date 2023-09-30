@@ -38,6 +38,7 @@ class PageGroupedDBImpl : public PageGroupedDB {
       const Key start_key = 1,
       const Key end_key = std::numeric_limits<Key>::max()) override;
 
+  void GetIOStats(uint64_t & reads, uint64_t & writes) override;
  private:
   void WriteBatch(const WriteOutBatch& records);
   std::pair<Key, Key> GetPageBoundsFor(Key key);
